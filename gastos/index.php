@@ -31,6 +31,32 @@
 .input-group-btn{
 	width: 0%;
 }
+
+.btn_refresh{
+	background-color: #fff; 
+	border-color: #cccccc; 
+	color: #333;  
+	 -moz-user-select: none;
+    background-image: none;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857;
+    margin-bottom: 0;
+    padding: 6px 12px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    height: 28px;
+}
+
+.btn_refresh:hover{
+	background-color: #e6e6e6; 
+	border-color: #adadad; 
+}
 </style>
 
 <script>
@@ -73,12 +99,53 @@ function grabarGasto(){
 
     //$gastosModel->grabar_gasto(1, 20.33, "2009-04-30", "lalalal", "2009-04-30 10:09:00");
 ?>
-<body>
+<body style="text-align:center;">
+
+
+    <div style="margin-right: 20%;" align="right">
+    	<input class="form-control" type="text" placeholder="Search" style="width:115px;">
+    	<button  class="btn_refresh" style="border-bottom-right-radius: 0;border-top-right-radius: 0; margin-bottom: 0.3em;" title="Refresh" name="refresh" type="button">
+    		<i class="glyphicon glyphicon-refresh icon-refresh" style="margin-top:-2px;"></i>
+    	</button>
+	    <div title="Columns" class="keep-open btn-group open" style="display:inline-flex;">
+	    	<button data-toggle="dropdown" class="btn btn-default dropdown-toggle btn_refresh" style="margin-left:-1px; margin-bottom: 0.3em; margin-left:-5px; border-bottom-left-radius: 0; border-top-left-radius: 0;" type="button">
+	    		<i class="glyphicon glyphicon-th icon-th" style="margin-top:-2px;"></i>  
+	    	</button>
+	    	<ul role="menu" class="dropdown-menu" style="display:;">
+	    		<li><label><input type="checkbox" checked="checked" value="1" data-field="id"> Item ID</label></li>
+	    		<li><label><input type="checkbox" checked="checked" value="2" data-field="name"> Item Name</label></li>
+	    		<li><label><input type="checkbox" checked="checked" value="3" data-field="price"> Item Price</label></li>
+	    	</ul>
+	    </div>    	
+    </div>
+	
+		<table style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center;" align="center">
+			<thead>
+				<tr>
+					<th>
+						<div>Nombre</div>
+					</th>
+					<th>
+						<div >Apellido</div>
+					</th>
+					<th>
+						<div >Item ID</div>
+					</th>
+					<th>
+						<div >Item Name</div>
+					</th>
+					<th>
+						<div >Item Price</div>
+					</th>
+				</tr>
+			</thead>
+		</table>
+	
 
 
 	<form id="formulario" action="grabarGasto.php" method="post">
-		<img src="img/portada.png"/>
-		<table border="1" style="text-align:center; width:100%;">
+		<!-- <img src="img/portada.png"/> -->
+		<table border="0" style="text-align:center; width:100%;">
 			<tr>
 				<td>
 					<select class="selectpicker" id="tipo_gasto" name="tipo_gasto" >
@@ -128,6 +195,9 @@ function grabarGasto(){
 		</table>
     </form>
 
+
+
+
                 <div class="page-header">
                     <button class="btn btn-primary start-example" data-zh="??????" data-es="Ver ejemplo">
                         Start Example
@@ -150,4 +220,3 @@ function grabarGasto(){
 
 </body>
 </html>
-
