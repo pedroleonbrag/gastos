@@ -71,6 +71,28 @@
 table th,td{
 	text-align:center;
 	border-right: 1px solid rgb(221, 221, 221);
+	border-bottom: 1px solid rgb(221, 221, 221);
+	word-wrap:break-word;
+}
+
+#tabla_header_datos th{
+	border-bottom: 0px solid rgb(221, 221, 221);
+}
+
+#tabla_header_datos tr{
+	height: 35px;
+}
+
+#tabla_datos tr{
+	height: 35px;
+}
+
+#tabla_datos thead tr th{
+	border-bottom:3px solid rgb(221, 221, 221);
+}
+
+#tabla_datos tbody tr:hover{
+	background-color:#F2F2F2;
 }
 
 table th:last-child{
@@ -82,6 +104,10 @@ table td:last-child{
 
 button:active{
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) inset !important;
+}
+
+.btn-group.bootstrap-select{
+	border-radius: 4px;
 }
 </style>
 
@@ -96,15 +122,31 @@ $(document).ready(function() {
     });
 
 
-	alinearTablas();
-
-	 $("#valor").focus();
+	//alinearTablas();
 
 } );
 
 
 function grabarGasto(){
 
+	msg = '';
+	if(jQuery.trim($('#tipo_gasto').val()) == ''){
+		msg += 'Seleccione un tipo de gasto \n';	
+	}
+
+	if(jQuery.trim($('#valor').val()) == ''){
+		msg += 'Seleccione un valor \n';	
+	}
+
+	if(jQuery.trim($('#fecha_gasto').val()) == ''){
+		msg += 'Seleccione la fecha \n';	
+	}
+
+	if(msg != ''){
+		alert(msg);
+		return;
+	}
+	
     $("#formulario").submit();
 
 }
@@ -142,7 +184,7 @@ function elegirColumnas(){
 </head>
 
 <?php
-    date_default_timezone_set('GMT');
+    date_default_timezone_set('America/Argentina/Buenos_Aires');
     require_once "gastosModelo.php";
 
     $gastosModel = new gastosModelo();
@@ -153,6 +195,7 @@ function elegirColumnas(){
 ?>
 <body style="text-align:center;">
 
+	<!--<div><?php echo date("Y-m-d H:i:s"); ?></div>-->
 
 	<form id="formulario" action="grabarGasto.php" method="post">
 		<img src="img/portada.png"/> 
@@ -179,8 +222,8 @@ function elegirColumnas(){
 			</tr>
 			<tr>
 				<td>
-					<div class="input-append date" id="dp3" data-date="2014-11-02" data-date-format="yyyy-mm-dd">
-						<input class="span2" id="fecha_gasto" value="2014-11-05" name="fecha_gasto" size="16" type="text" style="width:115px;" >
+					<div class="input-append date" id="dp3" data-date="<?php echo date("Y-m-d"); ?>" data-date-format="yyyy-mm-dd">
+						<input class="span2" id="fecha_gasto" value="<?php echo date("Y-m-d"); ?>" name="fecha_gasto" size="16" type="text" style="width:115px;" >
 						<span class="add-on">
 							<i class="icon-calendar"></i>
 						</span>
@@ -219,33 +262,34 @@ function elegirColumnas(){
 	    </div>    	
     </div>
 	
-		<table id="tabla_header_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-top-left-radius: 5px; border-top-right-radius: 5px;" align="center">
+		<!--<table id="tabla_header_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-top-left-radius: 5px; border-top-right-radius: 5px;" align="center">
 			<thead>
 				<tr>
-					<th>
-						<div>TIPO</div>
-					</th>
-					<th>
-						<div >FECHA</div>
-					</th>
-					<th>
-						<div >VALOR</div>
-					</th>
-					<th>
-						<div >COMENTARIOS</div>
-					</th>
+					<th style="width:17%;">Tipo</th>
+					<th style="width:11%;">Fecha</th>
+					<th style="width:11%;">Valor</th>
+					<th style="width:61%;">Comentarios</th>
 				</tr>
 			</thead>
 		</table>
+		-->
 
-		<table id="tabla_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; height:100px;" align="center">
+		<table id="tabla_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-radius: 5px; height:100px;" align="center">
+			<thead>
+				<tr>
+					<th style="width:17%;">Tipo</th>
+					<th style="width:11%;">Fecha</th>
+					<th style="width:11%;">Valor</th>
+					<th style="width:61%;">Comentarios</th>
+				</tr>
+			</thead>
 			<tbody> 
 				<?php foreach ($a_gastos as $gasto): ?>
-					<tr>
-                        <td><?php echo $gasto['D_TIPO_GASTO']; ?></td>
-                        <td><?php echo $gasto['FECHA_GASTO']; ?></td>
-                        <td><?php echo $gasto['VALOR']; ?></td>
-                        <td><?php echo $gasto['COMENTARIOS']; ?></td>
+					<tr style="border-top:1px solid #ddd;">
+                        <td style="width:17%;"><?php echo $gasto['D_TIPO_GASTO']; ?></td>
+                        <td style="width:11%;"><?php echo (($gasto['DIA']>9) ? $gasto['DIA'] : "0".$gasto['DIA'])."/".(($gasto['MES']>9) ? $gasto['MES'] : "0".$gasto['MES'])."/".$gasto['ANIO']; ?></td>
+                        <td style="width:11%;"><?php echo $gasto['VALOR']; ?></td>
+                        <td style="width:61%;"><?php echo $gasto['COMENTARIOS']; ?></td>
 					</tr>
                 <?php endforeach ?>
 			</tbody>

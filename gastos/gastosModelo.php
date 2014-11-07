@@ -19,7 +19,7 @@ class gastosModelo extends Modelo
 
 	public function get_gastos()
     {
-        $result = $this->_db->query('SELECT * FROM GASTO GA JOIN TIPO_GASTO TA ON TA.ID_TIPO_GASTO=GA.ID_TIPO_GASTO ORDER BY FECHA_GASTO DESC');
+        $result = $this->_db->query('SELECT GA.VALOR, DAY(GA.FECHA_GASTO) DIA, MONTH(GA.FECHA_GASTO) MES, YEAR(GA.FECHA_GASTO) ANIO, GA.FECHA_GASTO, GA.COMENTARIOS, TA.D_TIPO_GASTO FROM GASTO GA JOIN TIPO_GASTO TA ON TA.ID_TIPO_GASTO=GA.ID_TIPO_GASTO ORDER BY FECHA_GASTO DESC');
 
         $users = $result->fetch_all(MYSQLI_ASSOC);
 
