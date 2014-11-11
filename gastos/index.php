@@ -250,12 +250,6 @@ function elegirColumnas(){
     $a_tipos_gasto = $gastosModel->get_tipos_gasto();
 	$a_gastos = $gastosModel->get_gastos();
 
-
-	$a='r';
-	$a_gastos_coment = $gastosModel->get_gastos_comment($a);
-	//print_r($a_gastos_coment);
-
-    //$gastosModel->grabar_gasto(1, 20.33, "2009-04-30", "lalalal", "2009-04-30 10:09:00");
 ?>
 <body style="text-align:center;">
 
@@ -268,9 +262,9 @@ function elegirColumnas(){
 				<td>
 					<select class="selectpicker" id="tipo_gasto" name="tipo_gasto" >
                         <option value="" style="text-align: center;">Seleccionar</option>
-                      <?php foreach ($a_tipos_gasto as $option): ?>
-                        <option style="text-align: center;" value="<?php echo $option['ID_TIPO_GASTO']; ?>"><?php echo $option['D_TIPO_GASTO']; ?></option>
-                      <?php endforeach ?>
+                      <?php while ($fila = mysql_fetch_assoc($a_tipos_gasto)) { ?>
+                        <option style="text-align: center;" value="<?php echo $fila['ID_TIPO_GASTO']; ?>"><?php echo $fila['D_TIPO_GASTO']; ?></option>
+                      <?php } ?>
 					</select>
 				</td>                                               
 			</tr>
@@ -296,7 +290,7 @@ function elegirColumnas(){
 			</tr>
 			<tr>
 				<td>
-					<textarea style="text-align:center;" id="comentarios" name="comentarios" placeholder="Comentarios"></textarea>
+					<textarea style="text-align:center;" id="comentarios" name="comentarios" placeholder="Detalle"></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -341,21 +335,21 @@ function elegirColumnas(){
 		<table id="tabla_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-radius: 5px; height:100px; display:none;" align="center">
 			<thead id="header_tabla_datos">
 				<tr>
-					<th style="width:17%;">Tipo</th>
+					<th style="width:17%;">Concepto</th>
 					<th style="width:11%;">Fecha</th>
 					<th style="width:11%;">Valor</th>
-					<th style="width:61%;">Comentarios</th>
+					<th style="width:61%;">Detalle</th>
 				</tr>
 			</thead>
 			<tbody id="body_tabla_datos"> 
-				<?php foreach ($a_gastos as $gasto): ?>
+				<?php while ($gasto = mysql_fetch_assoc($a_gastos)) { ?>
 					<tr style="border-top:1px solid #ddd;">
                         <td style="width:17%;"><?php echo $gasto['D_TIPO_GASTO']; ?></td>
                         <td style="width:11%;"><?php echo (($gasto['DIA']>9) ? $gasto['DIA'] : "0".$gasto['DIA'])."/".(($gasto['MES']>9) ? $gasto['MES'] : "0".$gasto['MES'])."/".$gasto['ANIO']; ?></td>
                         <td style="width:11%;"><?php echo $gasto['VALOR']; ?></td>
                         <td style="width:61%;"><?php echo $gasto['COMENTARIOS']; ?></td>
 					</tr>
-                <?php endforeach ?>
+                <?php } ?>
 			</tbody>
 		</table>
 
