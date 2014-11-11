@@ -121,8 +121,17 @@ $(document).ready(function() {
     autoclose: true
     });
 
-
+	$('#tabla_datos').fadeIn(3000);
+	$('#div_search').fadeIn(3000);
 	//alinearTablas();
+
+	var json = '[{"result":true,"count":1}, {"result":false,"count":2}]',
+    obj = JSON.parse(json);
+
+	//alert(obj[0].result);
+//	alert(obj[0].count);
+//	alert(obj[1].result);
+//	alert(obj[1].count);
 
 } );
 
@@ -135,7 +144,9 @@ function grabarGasto(){
 	}
 
 	if(jQuery.trim($('#valor').val()) == ''){
-		msg += 'Seleccione un valor \n';	
+		msg += 'Ingrese un valor \n';	
+	}else if(isNaN(jQuery.trim($('#valor').val()))){
+		msg += 'El valor debe ser numerico \n';	
 	}
 
 	if(jQuery.trim($('#fecha_gasto').val()) == ''){
@@ -148,6 +159,54 @@ function grabarGasto(){
 	}
 	
     $("#formulario").submit();
+
+}
+
+function filtrarGasto(){
+
+	search = jQuery.trim($('#search').val());
+
+	if(search.length < 0)
+		return;
+
+	var request = $.ajax({
+		url: "filtrarGasto.php",
+		type: "POST",
+		data: { search : search },
+		dataType: "html"
+	});
+
+	request.done(function(data) {
+		refreshTabla(data);
+	});
+}
+
+function refreshTabla(data){
+	var json = data;
+	obj = JSON.parse(json);
+
+	$("#body_tabla_datos tr").remove(); 
+	var table = document.getElementById("body_tabla_datos");
+	for(i=0; i<obj.length; i++){
+		
+		cant_filas = table.rows.length;
+
+		var row = table.insertRow(cant_filas);
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+		var cell3 = row.insertCell(2);
+		var cell4 = row.insertCell(3);
+
+		cell1.style.width = '17%';
+		cell2.style.width = '11%';
+		cell3.style.width = '11%';		
+		cell4.style.width = '61%';
+	
+		cell1.innerHTML = obj[i].D_TIPO_GASTO;
+		cell2.innerHTML = obj[i].DIA + '/' + obj[i].MES + '/' + obj[i].ANIO;
+		cell3.innerHTML = obj[i].VALOR;
+		cell4.innerHTML = obj[i].COMENTARIOS;
+	}
 
 }
 
@@ -190,6 +249,11 @@ function elegirColumnas(){
     $gastosModel = new gastosModelo();
     $a_tipos_gasto = $gastosModel->get_tipos_gasto();
 	$a_gastos = $gastosModel->get_gastos();
+
+
+	$a='r';
+	$a_gastos_coment = $gastosModel->get_gastos_comment($a);
+	//print_r($a_gastos_coment);
 
     //$gastosModel->grabar_gasto(1, 20.33, "2009-04-30", "lalalal", "2009-04-30 10:09:00");
 ?>
@@ -245,9 +309,9 @@ function elegirColumnas(){
 
 
 
-    <div style="margin-right: 20%;" align="right">
-    	<input class="form-control" type="text" placeholder="Search" style="width:115px;">
-    	<button class="btn_refresh" style="border-bottom-right-radius: 0;border-top-right-radius: 0; margin-bottom: 0.3em;" title="Refresh" name="refresh" type="button">
+    <div id="div_search" style="margin-right: 20%; display:none;" align="right">
+    	<input id="search" class="form-control" onkeyup="filtrarGasto();" autocomplete="off" type="text" placeholder="Search" style="width:115px;">
+    	<button class="btn_refresh" onclick="filtrarGasto();" style="border-bottom-right-radius: 0;border-top-right-radius: 0; margin-bottom: 0.3em;" title="Refresh" name="refresh" type="button">
     		<i class="glyphicon glyphicon-refresh icon-refresh" style="margin-top:-2px;"></i>
     	</button>
 	    <div title="Columns" class="keep-open btn-group open" style="display:inline-flex;">
@@ -274,8 +338,8 @@ function elegirColumnas(){
 		</table>
 		-->
 
-		<table id="tabla_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-radius: 5px; height:100px;" align="center">
-			<thead>
+		<table id="tabla_datos" border="0" style="width: 60%; border: 1px solid rgb(221, 221, 221); text-align:center; border-radius: 5px; height:100px; display:none;" align="center">
+			<thead id="header_tabla_datos">
 				<tr>
 					<th style="width:17%;">Tipo</th>
 					<th style="width:11%;">Fecha</th>
@@ -283,7 +347,7 @@ function elegirColumnas(){
 					<th style="width:61%;">Comentarios</th>
 				</tr>
 			</thead>
-			<tbody> 
+			<tbody id="body_tabla_datos"> 
 				<?php foreach ($a_gastos as $gasto): ?>
 					<tr style="border-top:1px solid #ddd;">
                         <td style="width:17%;"><?php echo $gasto['D_TIPO_GASTO']; ?></td>

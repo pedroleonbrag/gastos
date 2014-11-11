@@ -26,6 +26,16 @@ class gastosModelo extends Modelo
         return $users;
     }
 
+	public function get_gastos_comment($comentario)
+    {
+		$comentario = strtoupper($comentario);
+        $result = $this->_db->query('SELECT GA.VALOR, DAY(GA.FECHA_GASTO) DIA, MONTH(GA.FECHA_GASTO) MES, YEAR(GA.FECHA_GASTO) ANIO, GA.FECHA_GASTO, GA.COMENTARIOS, TA.D_TIPO_GASTO FROM GASTO GA JOIN TIPO_GASTO TA ON TA.ID_TIPO_GASTO=GA.ID_TIPO_GASTO WHERE UPPER(COMENTARIOS) LIKE \'%'.$comentario.'%\' ORDER BY FECHA_GASTO DESC');
+
+        $users = $result->fetch_all(MYSQLI_ASSOC);
+
+        return $users;
+    }
+
     public function grabar_gasto($id_tipo_gasto, $valor, $fecha_gasto, $comentarios, $fecha_ingreso)
     {
         $stmt = $this->_db->prepare("INSERT INTO GASTO(ID_TIPO_GASTO, VALOR, FECHA_GASTO, COMENTARIOS, FECHA_INGRESO) VALUES (?, ?, ?, ?, ?)");
