@@ -15,9 +15,9 @@ class gastosModelo extends Modelo
         return $result;
     }
 
-	public function get_gastos()
+	public function get_gastos($inicio, $cantidad)
     {
-        $result = mysql_query('SELECT GA.VALOR, DAY(GA.FECHA_GASTO) DIA, MONTH(GA.FECHA_GASTO) MES, YEAR(GA.FECHA_GASTO) ANIO, GA.FECHA_GASTO, GA.COMENTARIOS, TA.D_TIPO_GASTO FROM GASTO GA JOIN TIPO_GASTO TA ON TA.ID_TIPO_GASTO=GA.ID_TIPO_GASTO ORDER BY FECHA_GASTO DESC', $this->_db);
+        $result = mysql_query('SELECT SQL_CALC_FOUND_ROWS GA.VALOR, DAY(GA.FECHA_GASTO) DIA, MONTH(GA.FECHA_GASTO) MES, YEAR(GA.FECHA_GASTO) ANIO, GA.FECHA_GASTO, GA.COMENTARIOS, TA.D_TIPO_GASTO FROM GASTO GA JOIN TIPO_GASTO TA ON TA.ID_TIPO_GASTO=GA.ID_TIPO_GASTO ORDER BY FECHA_GASTO DESC LIMIT '.$inicio.', '.$cantidad, $this->_db);
 
         return $result;
     }
@@ -37,5 +37,14 @@ class gastosModelo extends Modelo
         
         return $result;
     }
+
+    public function get_total()
+    {
+        $result = mysql_query('SELECT FOUND_ROWS() AS TOTAL', $this->_db);
+
+        $total = mysql_fetch_assoc($result);
+        return $total['TOTAL'];
+    }
+
 } 
 ?> 

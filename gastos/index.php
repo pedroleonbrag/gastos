@@ -109,6 +109,32 @@ button:active{
 .btn-group.bootstrap-select{
 	border-radius: 4px;
 }
+
+#header{
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 100;
+	background-color:darkcyan; 
+	height:20px;
+}
+
+#footer{
+	position: fixed;
+	width: 100%;
+	z-index: 100;
+	background-color:darkcyan; 
+	height:20px;
+	bottom:0px;
+}
+
+#formulario{
+	margin-top: 30px;
+}
+
+li > a{
+	color: darkcyan;
+}
 </style>
 
 <script>
@@ -237,26 +263,69 @@ function elegirColumnas(){
 	}
 }
 
+function anterior(){
+	inicio = parseInt($("#inicio").val()) - 12;
+	$("#inicio").val(inicio);
+	$("#form_pag").submit();
+}
+
+function siguiente(){
+	inicio = parseInt($("#inicio").val()) + 12;
+	$("#inicio").val(inicio);
+	$("#form_pag").submit();
+}
+
+function irPagina(pag){
+	
+	inicio = (pag - 1) * 12;
+	$("#inicio").val(inicio);
+	$("#form_pag").submit();
+
+}
+
 </script>
 
 
 </head>
 
 <?php
+    
     date_default_timezone_set('America/Argentina/Buenos_Aires');
     require_once "gastosModelo.php";
 
+print_r($_POST['inicio']);
+
+    $inicio = (isset($_POST['inicio'])) ? $_POST['inicio'] : 0;
+    $cant   = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : 12;
+    $pagina_actual = ($inicio / $cant) + 1;
+
+echo "inicio: ".$inicio;
+
+
     $gastosModel = new gastosModelo();
     $a_tipos_gasto = $gastosModel->get_tipos_gasto();
-	$a_gastos = $gastosModel->get_gastos();
+	$a_gastos = $gastosModel->get_gastos($inicio, $cant);
+	$total = $gastosModel->get_total();
+
+	$cant_paginas = ceil($total / $cant);
+	echo "cant paginas: ".$cant_paginas;
+	echo "pagina actual: ".$pagina_actual;
 
 ?>
 <body style="text-align:center;">
 
 	<!--<div><?php echo date("Y-m-d H:i:s"); ?></div>-->
 
-	<form id="formulario" action="grabarGasto.php" method="post">
-		<img src="img/portada.png"/> 
+	<div id="header"></div>
+
+	<form id="form_pag" action="index.php" method="POST">
+		<input type="hidden" id="inicio" name="inicio" value=<?php echo '"'.$inicio.'"'; ?> />
+		<input type="hidden" id="cantidad" name="cantidad" value="12"/>	
+	</form>
+
+	<form id="formulario" action="grabarGasto.php" method="POST">
+		<!--<img src="img/portada3.png"/> -->
+
 		<table border="0" style="text-align:center; width:100%;">
 			<tr>
 				<td>
@@ -268,6 +337,8 @@ function elegirColumnas(){
 					</select>
 				</td>                                               
 			</tr>
+
+
 
 			<tr>
 				<td>
@@ -353,6 +424,41 @@ function elegirColumnas(){
 			</tbody>
 		</table>
 
+
+<div class="pagination" style="width:60%;">
+	<ul class="pagination">
+		<?php 
+			$habilitacion_back = ($pagina_actual == 1) ? 'disabled' : '';
+			$onclick_anterior = ($pagina_actual == 1) ? '' : 'onclick=\'anterior();\'';
+			echo "<li class='page-pre ".$habilitacion_back."'><a ".$onclick_anterior.">&lt;</a></li>";
+			for($i = 1; $i<=$cant_paginas; $i++){
+				$activa = ($pagina_actual == $i) ? 'active disabled' : '';
+				echo "<li class='page-number ".$activa."'><a onclick='irPagina(".$i.");'>".$i."</a></li>";
+			}
+
+			$habilitacion_to = ($pagina_actual == $cant_paginas) ? 'disabled' : '';
+			$onclick_sgte = ($pagina_actual == $cant_paginas) ? '' : 'onclick=\'siguiente();\'';
+			echo "<li class='page-next ".$habilitacion_to."'><a ".$onclick_sgte.">&gt;</a></li>";
+
+		?>
+
+
+		<!--<li class="page-pre disabled"><a href="javascript:void(0)">&lt;</a></li>
+		<li class="page-number active disabled"><a href="javascript:void(0)">1</a></li>
+		<li class="page-number"><a href="javascript:void(0)">2</a></li>
+		<li class="page-number"><a href="javascript:void(0)">3</a></li>
+		<li class="page-number"><a href="javascript:void(0)">4</a></li>
+		<li class="page-number"><a href="javascript:void(0)">5</a></li>
+		<li class="page-number"><a href="javascript:void(0)">2</a></li>
+		<li class="page-number"><a href="javascript:void(0)">3</a></li>
+		<li class="page-number"><a href="javascript:void(0)">4</a></li>
+		<li class="page-number"><a href="javascript:void(0)">5</a></li> -->
+		
+		
+	</ul>
+</div>
+
+<div id="footer"></div>
 
 </body>
 </html>
