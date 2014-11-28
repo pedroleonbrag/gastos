@@ -46,5 +46,20 @@ class gastosModelo extends Modelo
         return $total['TOTAL'];
     }
 
+    public function get_total_gastos()
+    {
+        $result = mysql_query('SELECT SUM(VALOR) AS TOTAL FROM GASTO WHERE ID_TIPO_GASTO<>5 ', $this->_db);
+
+        $total = mysql_fetch_assoc($result);
+        return $total['TOTAL'];
+    }
+
+    public function get_top_5()
+    {
+        $result = mysql_query('SELECT TG.D_TIPO_GASTO, SUM(GA.VALOR) SUMA FROM GASTO GA JOIN TIPO_GASTO TG ON TG.ID_TIPO_GASTO = GA.ID_TIPO_GASTO WHERE GA.ID_TIPO_GASTO <> 5 GROUP BY TG.D_TIPO_GASTO ORDER BY SUMA DESC', $this->_db);
+
+        return $result;
+    }    
+
 } 
 ?> 

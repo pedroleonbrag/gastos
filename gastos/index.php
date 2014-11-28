@@ -135,6 +135,14 @@ button:active{
 li > a{
 	color: darkcyan;
 }
+
+.highcharts-background{
+	fill: transparent;
+}
+
+.page-number, .page-pre, .page-next{
+	cursor: pointer;
+}
 </style>
 
 <script>
@@ -143,23 +151,161 @@ li > a{
 $(document).ready(function() {
 
     $('#fecha_gasto').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true
+	    format: 'yyyy-mm-dd',
+	    autoclose: true
     });
 
 	$('#tabla_datos').fadeIn(3000);
 	$('#div_search').fadeIn(3000);
-	//alinearTablas();
 
-	var json = '[{"result":true,"count":1}, {"result":false,"count":2}]',
-    obj = JSON.parse(json);
+	//var json = '[{"result":true,"count":1}, {"result":false,"count":2}]',
+    //obj = JSON.parse(json);
 
-	//alert(obj[0].result);
-//	alert(obj[0].count);
-//	alert(obj[1].result);
-//	alert(obj[1].count);
+	generarGrafico();
 
 } );
+
+function generarGrafico(objJson){
+
+	if(objJson == null){
+
+		var request = $.ajax({
+			url: "estadisticas.php",
+			type: "POST",
+			data: { tipo : 'top5' },
+			dataType: "html"
+		});
+
+		request.done(function(data) {
+			var json = data;
+			obj = JSON.parse(json);
+			generarGrafico(obj);
+		});
+
+	}else{
+
+
+
+		for(i=0; i<objJson.length; i++){
+			
+			//alert(objJson[i].D_TIPO_GASTO + ' - ' + objJson[i].SUMA);
+			
+		}
+
+		tipo_0  = objJson[0].D_TIPO_GASTO;
+		tipo_1  = objJson[1].D_TIPO_GASTO;
+		tipo_2  = objJson[2].D_TIPO_GASTO;
+		tipo_3  = objJson[3].D_TIPO_GASTO;
+		tipo_4  = objJson[4].D_TIPO_GASTO;
+		tipo_5  = objJson[5].D_TIPO_GASTO;
+		tipo_6  = objJson[6].D_TIPO_GASTO;
+		valor_0 = objJson[0].SUMA;
+		valor_1 = objJson[1].SUMA;
+		valor_2 = objJson[2].SUMA;
+		valor_3 = objJson[3].SUMA;
+		valor_4 = objJson[4].SUMA;
+		valor_5 = objJson[5].SUMA;
+		valor_6 = objJson[6].SUMA;
+		
+
+		/*porc_0 = (parseInt(valor_0) * 100 ) / parseInt(total);
+		porc_1 = (parseInt(valor_1) * 100 ) / parseInt(total);
+		porc_2 = (parseInt(valor_2) * 100 ) / parseInt(total);
+		porc_3 = (parseInt(valor_3) * 100 ) / parseInt(total);
+		porc_4 = (parseInt(valor_4) * 100 ) / parseInt(total);*/
+
+		//alert(total);		
+		//alert(parseFloat(porc_0).toFixed(2));
+		
+		/*porc_0 = parseFloat(porc_0).toFixed(2);
+		porc_1 = parseFloat(porc_1).toFixed(2);
+		porc_2 = parseFloat(porc_2).toFixed(2);
+		porc_3 = parseFloat(porc_3).toFixed(2);
+		porc_4 = parseFloat(porc_4).toFixed(2);
+		porc_0 = parseFloat(porc_0);
+		porc_1 = parseFloat(porc_1);
+		porc_2 = parseFloat(porc_2);
+		porc_3 = parseFloat(porc_3);
+		porc_4 = parseFloat(porc_4);*/
+		//alert('hola');
+		
+		/*alert(Math.round(porc_1,2));
+		alert(Math.round(porc_2,2));
+		alert(Math.round(porc_3,2));
+		alert(Math.round(porc_4,2));*/
+		
+
+
+		$('#container').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: 0,//null,
+	            plotShadow: false,
+	            width: 300
+	        },
+
+	        title: {
+			    text: '',
+			    style: {
+			        display: 'none'
+		    	}
+			},
+
+			subtitle: {
+	    		text: '',
+	    		style: {
+	        		display: 'none'
+	    		}
+			},
+
+			exporting: { 
+				enabled: false 
+			},
+
+	        tooltip: {
+	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: false,
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+	                    style: {
+	                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+	                    }
+	                }
+	            }
+	        },
+	        colors : ['darkcyan', '#72060F', '#FBEEC5', 'silver', 'black', 'white', '#0000FF'],
+	        series: [{
+	            type: 'pie',
+	            name: 'Porc. Gasto',
+	            data: [
+	                [tipo_0, parseFloat(valor_0)],
+	                [tipo_1, parseFloat(valor_1)],
+	                [tipo_2, parseFloat(valor_2)],
+	                [tipo_3, parseFloat(valor_3)],
+	                [tipo_4, parseFloat(valor_4)],
+	                [tipo_5, parseFloat(valor_5)],
+	                [tipo_6, parseFloat(valor_6)]
+	            ]
+	        }]
+	    });
+
+		$("text:contains('Highcharts.com')").css('display', 'none');
+
+	}
+
+	/*
+	                [tipo_0, parseFloat(valor_0)],
+	                [tipo_1, parseFloat(valor_1)],
+	                [tipo_2, parseFloat(valor_2)],
+	                [tipo_3, parseFloat(valor_3)],
+	                [tipo_4, parseFloat(valor_4)]
+	*/
+}
 
 
 function grabarGasto(){
@@ -373,13 +519,14 @@ echo "inicio: ".$inicio;
     </form>
 
 
+	<div id="container" style="min-width: 310px; height: 400px; max-width: 600px; position: absolute; float:left;"></div>
 
     <div id="div_search" style="margin-right: 20%; display:none;" align="right">
     	<input id="search" class="form-control" onkeyup="filtrarGasto();" autocomplete="off" type="text" placeholder="Search" style="width:115px;">
-    	<button class="btn_refresh" onclick="filtrarGasto();" style="border-bottom-right-radius: 0;border-top-right-radius: 0; margin-bottom: 0.3em;" title="Refresh" name="refresh" type="button">
+    	<button class="btn_refresh" onclick="filtrarGasto();" style="border-bottom-right-radius: 0;border-top-right-radius: 0; margin-bottom: 0.3em; display:none;" title="Refresh" name="refresh" type="button">
     		<i class="glyphicon glyphicon-refresh icon-refresh" style="margin-top:-2px;"></i>
     	</button>
-	    <div title="Columns" class="keep-open btn-group open" style="display:inline-flex;">
+	    <div title="Columns" class="keep-open btn-group open" style="display:inline-flex; display:none;">
 	    	<button id="btn_elegir_columnas" onclick="elegirColumnas();" class="btn btn-default btn_refresh" style="border-radius:4px; margin-left:-1px; margin-bottom: 0.3em; margin-left:-5px; border-bottom-left-radius: 0; border-top-left-radius: 0; background-color: white; box-shadow:0 0px 0px rgba(0, 0, 0, 0.15) inset, 0 0px 0px rgba(0, 0, 0, 0.05);" type="button">
 	    		<i class="glyphicon glyphicon-th icon-th" style="margin-top:-2px;"></i>  
 	    	</button>
@@ -457,6 +604,9 @@ echo "inicio: ".$inicio;
 		
 	</ul>
 </div>
+
+<script src="js/highcharts.js"></script>
+<script src="js/modules/exporting.js"></script>
 
 <div id="footer"></div>
 
