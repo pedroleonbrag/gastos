@@ -436,16 +436,17 @@ function irPagina(pag){
 
 <?php
     
+    session_start();
+    if(!isset($_SESSION['userid'])){
+        header("location:login.php");
+    }
+        
     date_default_timezone_set('America/Argentina/Buenos_Aires');
     require_once "gastosModelo.php";
-
-print_r($_POST['inicio']);
 
     $inicio = (isset($_POST['inicio'])) ? $_POST['inicio'] : 0;
     $cant   = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : 12;
     $pagina_actual = ($inicio / $cant) + 1;
-
-echo "inicio: ".$inicio;
 
 
     $gastosModel = new gastosModelo();
@@ -464,7 +465,7 @@ echo "inicio: ".$inicio;
 
 	<div id="header"></div>
 
-	<form id="form_pag" action="indeeex.php" method="POST">
+	<form id="form_pag" action="gastos.php" method="POST">
 		<input type="hidden" id="inicio" name="inicio" value=<?php echo '"'.$inicio.'"'; ?> />
 		<input type="hidden" id="cantidad" name="cantidad" value="12"/>	
 	</form>

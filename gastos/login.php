@@ -233,6 +233,8 @@ function loguear(){
 </body>
 
 <?php 
+
+	session_start();
 	
 	require_once "gastosModelo.php";
 	
@@ -245,10 +247,11 @@ function loguear(){
 		$passEnc = hash("sha256", $pass);
 		
 		$gastosModel = new gastosModelo();
-    	$loginCorrecto = $gastosModel->login($user, $passEnc);
+    	$id_usuario = $gastosModel->login($user, $passEnc);
 		
-    	if($loginCorrecto){
-    		echo "<script>location.href = 'indeeex.php';</script>";
+    	if($id_usuario != ""){
+    	    $_SESSION['userid'] = $id_usuario;
+    		echo "<script>location.href = 'gastos.php';</script>";
     		//die();
     	}else{
     		echo "<script>document.getElementById('err_login').style.visibility = 'visible';</script>";
