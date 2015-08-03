@@ -1647,17 +1647,21 @@ input[type="checkbox"][readonly] {
 input:focus:invalid,
 textarea:focus:invalid,
 select:focus:invalid {
-  color: #b94a48;
+  color: gray;
   border-color: #ee5f5b;
 }
 
 input:focus:invalid:focus,
 textarea:focus:invalid:focus,
 select:focus:invalid:focus {
-  border-color: #e9322d;
-  -webkit-box-shadow: 0 0 6px #f8b9b7;
-     -moz-box-shadow: 0 0 6px #f8b9b7;
-          box-shadow: 0 0 6px #f8b9b7;
+  border-color: darkcyan;
+  outline: 0;
+  outline: thin dotted \9;
+  /* IE6-9 */
+
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px gray;
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px gray;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px gray;
 }
 
 .form-actions {
@@ -3283,7 +3287,7 @@ button.close {
 
 .btn:hover,
 .btn:focus {
-  color: #333333;
+  color: darkcyan;
   text-decoration: none;
   background-position: 0 -15px;
   -webkit-transition: background-position 0.1s linear;

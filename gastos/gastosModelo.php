@@ -60,6 +60,14 @@ class gastosModelo extends Modelo
 
         return $result;
     }    
+    
+    public function login($usuario, $pass)
+    {
+        $result = mysql_query('SELECT COUNT(1) as CANT FROM USUARIO US WHERE US.C_USUARIO =\''.$usuario.'\' AND US.PASS = \''.$pass.'\'', $this->_db);
+		$result = mysql_fetch_assoc($result);
+        $cant = (int) $result['CANT'];
+        return $cant > 0;
+    }     
 
 } 
 ?> 

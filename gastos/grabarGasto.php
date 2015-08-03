@@ -7,5 +7,5 @@
     $aa = 20.33;
     $gastosModel->grabar_gasto($_POST['tipo_gasto'], $_POST['valor'], $_POST['fecha_gasto'], $_POST['comentarios'], date("Y-m-d H:i:s"));
 
-    header('Location: index.php');
+    header('Location: indeeex.php');
 ?>
