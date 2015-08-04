@@ -1,3 +1,7 @@
+<?php 
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -233,8 +237,6 @@ function loguear(){
 </body>
 
 <?php 
-
-	session_start();
 	
 	require_once "gastosModelo.php";
 	
@@ -252,7 +254,6 @@ function loguear(){
     	if($id_usuario != ""){
     	    $_SESSION['userid'] = $id_usuario;
     		echo "<script>location.href = 'gastos.php';</script>";
-    		//die();
     	}else{
     		echo "<script>document.getElementById('err_login').style.visibility = 'visible';</script>";
     	}

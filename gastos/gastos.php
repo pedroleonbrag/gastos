@@ -1,3 +1,7 @@
+<?php 
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -435,10 +439,9 @@ function irPagina(pag){
 </head>
 
 <?php
-    
-    session_start();
+        
     if(!isset($_SESSION['userid'])){
-        header("location:login.php");
+        echo "<script>location.href = 'login.php';</script>";
     }
         
     date_default_timezone_set('America/Argentina/Buenos_Aires');
