@@ -25,7 +25,7 @@ html{
     right: 50px;
     bottom: 50px;
 	float: right;
-    box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
+    box-shadow: 0 0 5px rgba(0,0,0,.35),0 5px 8px rgba(0,0,0,.35);
     box-sizing: content-box;
     cursor: pointer;
     outline: none;
