@@ -1,5 +1,32 @@
 <?php 
     session_start();
+    
+    require_once "gastosModelo.php";
+    
+    $accion = isset($_POST['accion']) ? $_POST['accion'] : "";
+    
+    $errorLogin = false;
+    
+    if($accion == "login"){
+    
+        $user = trim($_POST['email']);
+        $pass = trim($_POST['password']);
+        $passEnc = hash("sha256", $pass);
+    
+        $gastosModel = new gastosModelo();
+        $id_usuario = $gastosModel->login($user, $passEnc);
+    
+        if($id_usuario != ""){
+            $_SESSION['userid'] = $id_usuario;
+            echo "<script>location.href = 'gastos.php';</script>";
+        }else{
+            $errorLogin = true;
+        }
+         
+        $_SESSION['email'] = $user;
+    
+    }
+    
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +58,7 @@
 <script src="js/jquery.bulletin.js"></script>
 <script src="js/examples.js"></script>
 
+
 </head>
 
 <style>
@@ -43,7 +71,7 @@
 body, html {
     height: 100%;
     background-repeat: no-repeat;
-    background-image: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));
+    background-image: linear-gradient(darkcyan, #2E2E2E);
 }
 
 label{
@@ -173,15 +201,21 @@ label{
 <script>
 $( document ).ready(function() {
 	//document.getElementById('err_login').style.visibility = "visible";
+	setTimeout(verificaEmail, 1000);
 });
 
 function verificaEmail(email){
+
+	if(email == null){
+		email = document.getElementById('inputEmail2').value;
+	}
+	
 	if(jQuery.trim(email) == 'pedroleonbrag@gmail.com' && $('#profile-img').attr("src") != "img/pedro.jpeg"){
 		$('#profile-img').fadeOut(500, function() {
 	        $('#profile-img').attr("src","img/pedro.jpeg");
 	        $('#profile-img').fadeIn(600);
 	    });
-	}else if($('#profile-img').attr("src") != "img/avatar.png"){
+	}else if(jQuery.trim(email) != 'pedroleonbrag@gmail.com' && $('#profile-img').attr("src") != "img/avatar.png"){
 		$('#profile-img').fadeOut(500, function() {
 	        $('#profile-img').attr("src","img/avatar.png");
 	        $('#profile-img').fadeIn(600);
@@ -216,50 +250,19 @@ function loguear(){
             <form class="form-signin" method="post" action="login.php">
             	<input type="hidden" id="accion" name="accion" />
                 <span id="reauth-email" class="reauth-email"></span>
-                <input type="email" id="inputEmail2" name="email" placeholder="Email address" required autofocus onblur="verificaEmail(this.value);">
+                <input type="email" id="inputEmail2" name="email" placeholder="Email address" required autofocus onblur="verificaEmail(this.value);" value="<?php echo (isset($_SESSION['email']) ? $_SESSION['email'] : ""); ?>">
                 <input type="password" id="inputPassword2" name="password" placeholder="Password" required>
-                <div id="remember" class="checkbox">
-                    <label>
-                        <input type="checkbox" value="remember-me"> Recordarme
-                    </label>
-                </div>
                 <button class="btn" onclick="loguear();">Ingresar</button>
             </form><!-- /form -->
             <a href="#" class="forgot-password">
                 &iquest;Olvid&oacute; su contrase&ntilde;a&#63;
             </a>
-			<label id="err_login" style="visibility:hidden; color: red; margin-top: 10px;">
+			<label id="err_login" style="visibility:<?php echo ($errorLogin ? "visible" : "hidden"); ?>; color: red; margin-top: 10px;">
             	Login incorrecto
 			</label>            
         </div><!-- /card-container -->
     </div><!-- /container -->
 
 </body>
-
-<?php 
-	
-	require_once "gastosModelo.php";
-	
-	$accion = isset($_POST['accion']) ? $_POST['accion'] : "";
-	
-	if($accion == "login"){
-		
-		$user = trim($_POST['email']);
-		$pass = trim($_POST['password']);
-		$passEnc = hash("sha256", $pass);
-		
-		$gastosModel = new gastosModelo();
-    	$id_usuario = $gastosModel->login($user, $passEnc);
-		
-    	if($id_usuario != ""){
-    	    $_SESSION['userid'] = $id_usuario;
-    		echo "<script>location.href = 'gastos.php';</script>";
-    	}else{
-    		echo "<script>document.getElementById('err_login').style.visibility = 'visible';</script>";
-    	}
-		
-	}
-	
-?>
 
 </html>

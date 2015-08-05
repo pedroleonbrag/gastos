@@ -153,7 +153,7 @@ li > a{
 
 
 $(document).ready(function() {
-
+	
     $('#fecha_gasto').datepicker({
 	    format: 'yyyy-mm-dd',
 	    autoclose: true
